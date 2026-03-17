@@ -1,0 +1,19 @@
+body {
+    background: #111;
+    color: white;
+    text-align: center;
+    font-family: Arial;
+}
+
+button {
+    padding: 10px;
+    margin: 10px;
+    background: cyan;
+    border: none;
+}
+
+pre {
+    background: #222;
+    padding: 10px;
+    margin: 20px;
+}
