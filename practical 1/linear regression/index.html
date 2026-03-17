@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Linear Regression — TensorFlow.js</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">∇</span>
+        <div>
+          <div class="logo-title">TensorFlow.js</div>
+          <div class="logo-sub">Linear Regression Lab</div>
+        </div>
+      </div>
+      <div class="tf-badge">Practical 1 · CO2 Analyze</div>
+    </div>
+  </header>
+
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="main">
+      <span class="tab-num">P2</span>
+      <span>Main Practical</span>
+    </button>
+    <button class="tab-btn" data-tab="a1">
+      <span class="tab-num">A1</span>
+      <span>Predicted vs Actual</span>
+    </button>
+    <button class="tab-btn" data-tab="a2">
+      <span class="tab-num">A2</span>
+      <span>Learning Rate Effect</span>
+    </button>
+    <button class="tab-btn" data-tab="a3">
+      <span class="tab-num">A3</span>
+      <span>Predict Unseen</span>
+    </button>
+  </nav>
+
+  <main class="content">
+
+    <!-- MAIN PRACTICAL -->
+    <section class="tab-panel active" id="tab-main">
+      <div class="panel-header">
+        <h2>Practical 1 — Linear Regression with Synthetic Data</h2>
+        <p>Train a simple regression model on synthetic (x, y) data using <code>tf.sequential()</code> and <code>tf.layers.dense()</code>.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-label">Configuration</div>
+          <div class="form-group"><label>Number of Samples</label><input type="number" id="main-samples" value="100" min="20" max="500"/></div>
+          <div class="form-group"><label>Epochs</label><input type="number" id="main-epochs" value="200" min="10" max="1000"/></div>
+          <div class="form-group"><label>Learning Rate</label><input type="number" id="main-lr" value="0.1" step="0.01" min="0.001" max="1"/></div>
+          <div class="form-group"><label>Noise Level</label><input type="number" id="main-noise" value="0.2" step="0.05" min="0" max="2"/></div>
+          <button class="btn-primary" id="main-train-btn">▶ Train Model</button>
+        </div>
+        <div class="card">
+          <div class="card-label">Model Summary</div>
+          <div class="summary-box" id="main-summary"><div class="summary-placeholder">Run training to see model summary...</div></div>
+        </div>
+      </div>
+      <div class="grid-2 mt">
+        <div class="card chart-card"><div class="card-label">Training Data + Regression Line</div><canvas id="main-data-chart"></canvas></div>
+        <div class="card chart-card"><div class="card-label">Loss Curve (MSE over Epochs)</div><canvas id="main-loss-chart"></canvas></div>
+      </div>
+      <div class="log-box" id="main-log"><div class="log-placeholder">Training logs will appear here...</div></div>
+    </section>
+
+    <!-- ASSIGNMENT 1 -->
+    <section class="tab-panel" id="tab-a1">
+      <div class="panel-header">
+        <h2>Assignment 1 — Predicted vs Actual Values</h2>
+        <p>Train a regression model on synthetic data and plot predicted vs actual values to evaluate model performance.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-label">Setup</div>
+          <div class="form-group"><label>Samples</label><input type="number" id="a1-samples" value="80" min="20" max="300"/></div>
+          <div class="form-group"><label>Epochs</label><input type="number" id="a1-epochs" value="300" min="50" max="1000"/></div>
+          <div class="form-group"><label>Train/Test Split (%)</label><input type="number" id="a1-split" value="80" min="50" max="95"/></div>
+          <button class="btn-primary" id="a1-train-btn">▶ Train &amp; Evaluate</button>
+        </div>
+        <div class="card">
+          <div class="card-label">Metrics</div>
+          <div class="metrics-grid">
+            <div class="metric-item"><div class="metric-val" id="a1-mae">—</div><div class="metric-lbl">MAE</div></div>
+            <div class="metric-item"><div class="metric-val" id="a1-mse">—</div><div class="metric-lbl">MSE</div></div>
+            <div class="metric-item"><div class="metric-val" id="a1-rmse">—</div><div class="metric-lbl">RMSE</div></div>
+            <div class="metric-item"><div class="metric-val" id="a1-r2">—</div><div class="metric-lbl">R² Score</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2 mt">
+        <div class="card chart-card"><div class="card-label">Predicted vs Actual (Scatter)</div><canvas id="a1-scatter-chart"></canvas></div>
+        <div class="card chart-card"><div class="card-label">Residuals Plot</div><canvas id="a1-residual-chart"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ASSIGNMENT 2 -->
+    <section class="tab-panel" id="tab-a2">
+      <div class="panel-header">
+        <h2>Assignment 2 — Learning Rate Effect on Convergence</h2>
+        <p>Experiment with different learning rates and analyze their effect on convergence.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Experiment Configuration</div>
+        <div class="lr-config-row">
+          <div class="form-group"><label>Epochs per Run</label><input type="number" id="a2-epochs" value="200" min="50" max="500"/></div>
+          <div class="form-group"><label>Samples</label><input type="number" id="a2-samples" value="100" min="20" max="300"/></div>
+          <div class="form-group"><label>Learning Rates (comma-separated)</label><input type="text" id="a2-lrs" value="0.001, 0.01, 0.1, 0.5"/></div>
+          <button class="btn-primary" id="a2-run-btn">▶ Run Experiment</button>
+        </div>
+      </div>
+      <div class="card chart-card mt" style="max-width:100%">
+        <div class="card-label">Loss Curves — All Learning Rates</div>
+        <canvas id="a2-loss-chart" style="max-height:380px"></canvas>
+      </div>
+      <div class="card mt">
+        <div class="card-label">Analysis Table</div>
+        <div class="table-wrap">
+          <table id="a2-table">
+            <thead><tr><th>Learning Rate</th><th>Final Loss</th><th>Epochs to &lt;0.05</th><th>Converged?</th><th>Behavior</th></tr></thead>
+            <tbody id="a2-tbody"><tr><td colspan="5" class="table-empty">Run experiment to see results</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASSIGNMENT 3 -->
+    <section class="tab-panel" id="tab-a3">
+      <div class="panel-header">
+        <h2>Assignment 3 — Predict Values for Unseen Inputs</h2>
+        <p>Train the model, then predict values for unseen inputs and compare with expected results.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-label">Train Model First</div>
+          <div class="form-group"><label>True Slope (m)</label><input type="number" id="a3-slope" value="3" step="0.5"/></div>
+          <div class="form-group"><label>True Intercept (b)</label><input type="number" id="a3-intercept" value="5" step="0.5"/></div>
+          <div class="form-group"><label>Epochs</label><input type="number" id="a3-epochs" value="300" min="50" max="1000"/></div>
+          <button class="btn-primary" id="a3-train-btn">▶ Train Model</button>
+        </div>
+        <div class="card">
+          <div class="card-label">Learned Parameters</div>
+          <div class="param-display">
+            <div class="param-row"><span>Learned Slope:</span><span id="a3-learned-slope">—</span></div>
+            <div class="param-row"><span>True Slope:</span><span id="a3-true-slope">—</span></div>
+            <div class="param-row"><span>Learned Intercept:</span><span id="a3-learned-intercept">—</span></div>
+            <div class="param-row"><span>True Intercept:</span><span id="a3-true-intercept">—</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card mt">
+        <div class="card-label">Predict Unseen Inputs</div>
+        <div class="predict-row">
+          <div class="form-group"><label>Input Values (comma-separated x values)</label><input type="text" id="a3-inputs" value="1.5, 3.7, 6.2, 8.9, 11, 15, 20"/></div>
+          <button class="btn-secondary" id="a3-predict-btn" disabled>⚡ Predict</button>
+        </div>
+        <div class="table-wrap mt">
+          <table>
+            <thead><tr><th>Input x</th><th>Predicted ŷ</th><th>Expected y = mx+b</th><th>Error</th><th>% Error</th></tr></thead>
+            <tbody id="a3-tbody"><tr><td colspan="5" class="table-empty">Train the model first, then click Predict</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card chart-card mt">
+        <div class="card-label">Predicted vs Expected on Unseen Inputs</div>
+        <canvas id="a3-chart"></canvas>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>Practical 1 · Linear Regression · TensorFlow.js</span>
+    <span>CO2 – Analyze</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
