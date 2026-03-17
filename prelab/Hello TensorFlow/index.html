@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TensorFlow.js Practicals</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="scanline"></div>
+  <div class="noise"></div>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-bracket">[</span>
+        <span class="logo-tf">TF</span>
+        <span class="logo-dot">.</span>
+        <span class="logo-js">JS</span>
+        <span class="logo-bracket">]</span>
+      </div>
+      <div class="header-meta">
+        <span class="badge">CO1 – Understand</span>
+        <span class="version">v4.x</span>
+      </div>
+    </div>
+    <h1 class="main-title">TensorFlow.js<br/><span class="sub-title">Practical Laboratory</span></h1>
+    <p class="header-desc">Interactive tensor operations running live in your browser.</p>
+  </header>
+
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="main">
+      <span class="tab-num">00</span> Main Practical
+    </button>
+    <button class="tab-btn" data-tab="a1">
+      <span class="tab-num">01</span> Assignment 1
+    </button>
+    <button class="tab-btn" data-tab="a2">
+      <span class="tab-num">02</span> Assignment 2
+    </button>
+    <button class="tab-btn" data-tab="a3">
+      <span class="tab-num">03</span> Assignment 3
+    </button>
+  </nav>
+
+  <main class="content">
+
+    <!-- ===== MAIN PRACTICAL ===== -->
+    <section class="tab-panel active" id="tab-main">
+      <div class="panel-header">
+        <h2>Hello TensorFlow.js</h2>
+        <p>Verify installation by creating tensors, performing addition, and printing results.</p>
+      </div>
+
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-label">STEP 01</div>
+          <h3>Create Tensors</h3>
+          <p>Create a scalar (0D) and a 1D vector tensor, then print their shapes and values.</p>
+          <button class="run-btn" onclick="runMain1()">▶ Run</button>
+          <div class="output-box" id="main1-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>const scalar = tf.scalar(42);
+const vector = tf.tensor1d([1, 2, 3, 4]);
+scalar.print();
+vector.print();</pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">STEP 02</div>
+          <h3>Tensor Addition</h3>
+          <p>Perform element-wise addition on two tensors and display the result.</p>
+          <button class="run-btn" onclick="runMain2()">▶ Run</button>
+          <div class="output-box" id="main2-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>const a = tf.tensor1d([10, 20, 30]);
+const b = tf.tensor1d([5,  8,  12]);
+const sum = tf.add(a, b);
+sum.print();</pre>
+          </div>
+        </div>
+
+        <div class="card full-width">
+          <div class="card-label">STEP 03</div>
+          <h3>Verify TF.js Installation</h3>
+          <p>Check TensorFlow.js version, backend, and memory stats to confirm proper installation.</p>
+          <button class="run-btn" onclick="runMain3()">▶ Run</button>
+          <div class="output-box" id="main3-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>console.log("TF Version:", tf.version.tfjs);
+console.log("Backend:", tf.getBackend());
+console.log("Memory:", tf.memory());</pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== ASSIGNMENT 1 ===== -->
+    <section class="tab-panel" id="tab-a1">
+      <div class="panel-header">
+        <h2>Assignment 1</h2>
+        <p>Create tensors of different dimensions — scalar, vector, and matrix — and print them.</p>
+      </div>
+
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-label">SCALAR — 0D</div>
+          <h3>Scalar Tensor</h3>
+          <p>A single number. Zero dimensions. Shape: <code>[]</code></p>
+          <button class="run-btn" onclick="runA1_1()">▶ Run</button>
+          <div class="output-box" id="a1-1-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>const scalar = tf.scalar(7);
+console.log("Shape:", scalar.shape);
+console.log("Rank:", scalar.rank);
+scalar.print();</pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">VECTOR — 1D</div>
+          <h3>Vector Tensor</h3>
+          <p>A 1D array of numbers. Shape: <code>[n]</code></p>
+          <button class="run-btn" onclick="runA1_2()">▶ Run</button>
+          <div class="output-box" id="a1-2-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>const vector = tf.tensor1d([1, 2, 3, 4, 5]);
+console.log("Shape:", vector.shape);
+console.log("Rank:", vector.rank);
+vector.print();</pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">MATRIX — 2D</div>
+          <h3>Matrix Tensor</h3>
+          <p>A 2D grid of numbers. Shape: <code>[rows, cols]</code></p>
+          <button class="run-btn" onclick="runA1_3()">▶ Run</button>
+          <div class="output-box" id="a1-3-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>const matrix = tf.tensor2d([[1,2,3],[4,5,6]]);
+console.log("Shape:", matrix.shape);
+console.log("Rank:", matrix.rank);
+matrix.print();</pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== ASSIGNMENT 2 ===== -->
+    <section class="tab-panel" id="tab-a2">
+      <div class="panel-header">
+        <h2>Assignment 2</h2>
+        <p>Perform element-wise addition and multiplication on two vectors.</p>
+      </div>
+
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-label">OPERATION 01</div>
+          <h3>Element-wise Addition</h3>
+          <p>Add corresponding elements of two vectors: <code>a[i] + b[i]</code></p>
+          <button class="run-btn" onclick="runA2_1()">▶ Run</button>
+          <div class="output-box" id="a2-1-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>const a = tf.tensor1d([1, 2, 3, 4, 5]);
+const b = tf.tensor1d([10, 20, 30, 40, 50]);
+const added = tf.add(a, b);
+console.log("Vector A:"); a.print();
+console.log("Vector B:"); b.print();
+console.log("A + B:"); added.print();</pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">OPERATION 02</div>
+          <h3>Element-wise Multiplication</h3>
+          <p>Multiply corresponding elements: <code>a[i] × b[i]</code></p>
+          <button class="run-btn" onclick="runA2_2()">▶ Run</button>
+          <div class="output-box" id="a2-2-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>const a = tf.tensor1d([1, 2, 3, 4, 5]);
+const b = tf.tensor1d([10, 20, 30, 40, 50]);
+const multiplied = tf.mul(a, b);
+console.log("Vector A:"); a.print();
+console.log("Vector B:"); b.print();
+console.log("A × B:"); multiplied.print();</pre>
+          </div>
+        </div>
+
+        <div class="card full-width">
+          <div class="card-label">COMBINED</div>
+          <h3>Both Operations Together</h3>
+          <p>Run addition and multiplication side-by-side with a summary.</p>
+          <button class="run-btn" onclick="runA2_3()">▶ Run Both</button>
+          <div class="output-box" id="a2-3-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>const a = tf.tensor1d([2, 4, 6]);
+const b = tf.tensor1d([3, 3, 3]);
+tf.add(a, b).print();    // [5, 7, 9]
+tf.mul(a, b).print();    // [6, 12, 18]</pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== ASSIGNMENT 3 ===== -->
+    <section class="tab-panel" id="tab-a3">
+      <div class="panel-header">
+        <h2>Assignment 3</h2>
+        <p>Demonstrate tensor reshaping and explain the difference between <code>reshape()</code> and <code>flatten()</code>.</p>
+      </div>
+
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-label">METHOD 01</div>
+          <h3>reshape()</h3>
+          <p>Change the shape of a tensor without changing its data. Total elements must stay the same.</p>
+          <button class="run-btn" onclick="runA3_1()">▶ Run</button>
+          <div class="output-box" id="a3-1-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>// 1D [6] → 2D [2,3]
+const t = tf.tensor1d([1,2,3,4,5,6]);
+const reshaped = t.reshape([2, 3]);
+console.log("Original shape:", t.shape);
+console.log("After reshape:", reshaped.shape);
+reshaped.print();</pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">METHOD 02</div>
+          <h3>flatten()</h3>
+          <p>Flatten any tensor to a 1D vector. Always results in shape <code>[n]</code>.</p>
+          <button class="run-btn" onclick="runA3_2()">▶ Run</button>
+          <div class="output-box" id="a3-2-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="code-block">
+            <pre>// 2D [2,3] → 1D [6]
+const mat = tf.tensor2d([[1,2,3],[4,5,6]]);
+const flat = mat.flatten();
+console.log("Original shape:", mat.shape);
+console.log("After flatten:", flat.shape);
+flat.print();</pre>
+          </div>
+        </div>
+
+        <div class="card full-width">
+          <div class="card-label">COMPARISON</div>
+          <h3>reshape() vs flatten() — Key Differences</h3>
+          <p>See both methods applied to the same tensor with explanations.</p>
+          <button class="run-btn" onclick="runA3_3()">▶ Run Comparison</button>
+          <div class="output-box" id="a3-3-output">
+            <span class="placeholder">// Output will appear here...</span>
+          </div>
+          <div class="comparison-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>reshape()</th>
+                  <th>flatten()</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Output shape</td><td>Any valid shape</td><td>Always 1D [n]</td></tr>
+                <tr><td>Input requirement</td><td>Same total elements</td><td>Any tensor</td></tr>
+                <tr><td>Rank change</td><td>Flexible (can be same or different)</td><td>Always → rank 1</td></tr>
+                <tr><td>Use case</td><td>Restructure data</td><td>Convert to flat vector</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="code-block">
+            <pre>const t = tf.tensor3d([[[1,2],[3,4]],[[5,6],[7,8]]]);
+console.log("Original shape:", t.shape); // [2,2,2]
+t.reshape([4,2]).print();  // → [4,2]
+t.flatten().print();       // → [8]</pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>TensorFlow.js Practical Lab</span>
+      <span class="footer-sep">·</span>
+      <span>CO1 – Understand</span>
+      <span class="footer-sep">·</span>
+      <span id="tf-version-footer">Loading TF.js...</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
