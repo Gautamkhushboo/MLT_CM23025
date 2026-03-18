@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignment 3 — CNN vs Dense Network</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Cabinet+Grotesk:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <!-- Cabinet Grotesk fallback -->
+  <style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');</style>
+</head>
+<body>
+
+  <div class="bg-halftone"></div>
+
+  <header>
+    <div class="a3-badge">Assignment 03</div>
+    <h1>CNN <span class="vs">vs</span> Dense<br/><em>Performance Comparison</em></h1>
+    <p>Train both a Convolutional Neural Network and a simple fully-connected Dense network on MNIST. Compare their accuracy, loss, parameters, and training speed side by side.</p>
+  </header>
+
+  <main>
+
+    <!-- MODEL CARDS (side by side) -->
+    <div class="models-grid">
+      <!-- CNN -->
+      <div class="model-card" id="card-cnn">
+        <div class="mc-header mc-cnn">
+          <div class="mc-icon">⬡</div>
+          <div>
+            <div class="mc-tag">Model A</div>
+            <div class="mc-name">CNN</div>
+          </div>
+          <div class="mc-status" id="cnn-status">Idle</div>
+        </div>
+        <div class="mc-arch">
+          <div class="arch-l cnn">Conv2D(8, 3×3)</div>
+          <div class="arch-l cnn">MaxPool(2×2)</div>
+          <div class="arch-l cnn">Conv2D(16, 3×3)</div>
+          <div class="arch-l cnn">MaxPool(2×2)</div>
+          <div class="arch-l shared">Flatten</div>
+          <div class="arch-l shared">Dense(10, Softmax)</div>
+        </div>
+        <div class="mc-params"><span>Parameters:</span><strong id="cnn-params">—</strong></div>
+      </div>
+
+      <!-- DENSE -->
+      <div class="model-card" id="card-dense">
+        <div class="mc-header mc-dense">
+          <div class="mc-icon">◈</div>
+          <div>
+            <div class="mc-tag">Model B</div>
+            <div class="mc-name">Dense</div>
+          </div>
+          <div class="mc-status" id="dense-status">Idle</div>
+        </div>
+        <div class="mc-arch">
+          <div class="arch-l dense">Flatten (784)</div>
+          <div class="arch-l dense">Dense(128, ReLU)</div>
+          <div class="arch-l dense">Dense(64, ReLU)</div>
+          <div class="arch-l shared">Dense(10, Softmax)</div>
+        </div>
+        <div class="mc-params"><span>Parameters:</span><strong id="dense-params">—</strong></div>
+      </div>
+    </div>
+
+    <!-- TRAINING CONFIG -->
+    <div class="config-card">
+      <h3>Training Configuration</h3>
+      <div class="cfg-row">
+        <div class="cfg-it"><label>Epochs</label>
+          <select id="cfg-e"><option value="3">3</option><option value="5" selected>5</option><option value="8">8</option></select>
+        </div>
+        <div class="cfg-it"><label>Batch</label>
+          <select id="cfg-b"><option value="64">64</option><option value="128" selected>128</option></select>
+        </div>
+        <div class="cfg-it"><label>Samples</label>
+          <select id="cfg-n"><option value="2000">2 000</option><option value="3000" selected>3 000</option><option value="5000">5 000</option></select>
+        </div>
+        <div class="cfg-it"><label>Optimizer</label><span class="cfg-fixed">Adam lr=0.001</span></div>
+        <div class="cfg-it"><label>Loss</label><span class="cfg-fixed">CategoricalCE</span></div>
+      </div>
+      <button class="btn-compare" id="btn-run" onclick="runComparison()">⬡ Train Both &amp; Compare</button>
+    </div>
+
+    <!-- LIVE TRAINING PROGRESS -->
+    <div class="live-section" id="live-section" style="display:none">
+      <h3>Live Training Progress</h3>
+      <div class="live-grid">
+        <div class="live-box lb-cnn">
+          <div class="lb-title cnn-color">CNN Training</div>
+          <div class="lb-prog-row"><span id="cnn-prog-txt">Loading...</span><span id="cnn-prog-p">0%</span></div>
+          <div class="lb-track"><div class="lb-fill cnn-fill" id="cnn-fill"></div></div>
+          <div class="lb-metrics" id="cnn-metrics"></div>
+        </div>
+        <div class="live-box lb-dense">
+          <div class="lb-title dense-color">Dense Training</div>
+          <div class="lb-prog-row"><span id="dense-prog-txt">Waiting...</span><span id="dense-prog-p">0%</span></div>
+          <div class="lb-track"><div class="lb-fill dense-fill" id="dense-fill"></div></div>
+          <div class="lb-metrics" id="dense-metrics"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS COMPARISON -->
+    <div class="results-section" id="results-section" style="display:none">
+      <h3>Comparison Results</h3>
+
+      <!-- Big comparison numbers -->
+      <div class="compare-row">
+        <div class="compare-col cnn-col">
+          <div class="col-model cnn-color">CNN</div>
+          <div class="big-metric"><div class="bm-val cnn-color" id="cnn-acc">—</div><div class="bm-lbl">Test Accuracy</div></div>
+          <div class="big-metric"><div class="bm-val" id="cnn-loss-final">—</div><div class="bm-lbl">Final Loss</div></div>
+          <div class="big-metric"><div class="bm-val" id="cnn-time">—</div><div class="bm-lbl">Train Time</div></div>
+          <div class="big-metric"><div class="bm-val" id="cnn-params-r">—</div><div class="bm-lbl">Parameters</div></div>
+        </div>
+        <div class="compare-divider">vs</div>
+        <div class="compare-col dense-col">
+          <div class="col-model dense-color">Dense</div>
+          <div class="big-metric"><div class="bm-val dense-color" id="dense-acc">—</div><div class="bm-lbl">Test Accuracy</div></div>
+          <div class="big-metric"><div class="bm-val" id="dense-loss-final">—</div><div class="bm-lbl">Final Loss</div></div>
+          <div class="big-metric"><div class="bm-val" id="dense-time">—</div><div class="bm-lbl">Train Time</div></div>
+          <div class="big-metric"><div class="bm-val" id="dense-params-r">—</div><div class="bm-lbl">Parameters</div></div>
+        </div>
+      </div>
+
+      <!-- Winner banner -->
+      <div class="winner-banner" id="winner-banner">
+        <div class="wb-icon">🏆</div>
+        <div id="wb-text"></div>
+      </div>
+
+      <!-- Accuracy Chart -->
+      <div class="chart-card">
+        <div class="cc-title">Accuracy per Epoch — CNN vs Dense</div>
+        <canvas id="comp-chart" width="800" height="260"></canvas>
+        <div class="chart-legend">
+          <span class="leg-item cnn-color">■ CNN Train</span>
+          <span class="leg-item cnn-color2">■ CNN Val</span>
+          <span class="leg-item dense-color">■ Dense Train</span>
+          <span class="leg-item dense-color2">■ Dense Val</span>
+        </div>
+      </div>
+
+      <!-- Comparison Table -->
+      <div class="comp-table-wrap">
+        <div class="comp-table-title">Detailed Comparison</div>
+        <div class="comp-table">
+          <div class="ct-head"><span>Metric</span><span class="cnn-color">CNN</span><span class="dense-color">Dense</span><span>Advantage</span></div>
+          <div class="ct-row" id="ct-acc"></div>
+          <div class="ct-row" id="ct-loss"></div>
+          <div class="ct-row" id="ct-params"></div>
+          <div class="ct-row" id="ct-time"></div>
+        </div>
+      </div>
+
+      <!-- Analysis -->
+      <div class="analysis-box" id="analysis-box"></div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span>Assignment 03 — CNN vs Dense Comparison</span>
+    <span id="ft">TF.js Loading...</span>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

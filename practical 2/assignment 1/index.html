@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignment 1 — CNN Accuracy Report</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <div class="bg-noise"></div>
+
+  <header>
+    <div class="tag">Assignment 01</div>
+    <h1>CNN on MNIST<br/><span>Accuracy After 5 Epochs</span></h1>
+    <p>Train a Convolutional Neural Network on the MNIST dataset for exactly <strong>5 epochs</strong> and report detailed accuracy metrics at each epoch.</p>
+  </header>
+
+  <main>
+    <!-- Objective Box -->
+    <div class="objective-box">
+      <div class="obj-icon">◎</div>
+      <div>
+        <div class="obj-title">Objective</div>
+        <div class="obj-text">Train CNN on MNIST → Run for 5 Epochs → Record & Report Accuracy at every epoch → Display final test accuracy.</div>
+      </div>
+    </div>
+
+    <!-- CNN Architecture -->
+    <div class="card arch-card">
+      <h3>CNN Architecture</h3>
+      <div class="arch-table">
+        <div class="at-row at-head"><span>Layer</span><span>Config</span><span>Output Shape</span></div>
+        <div class="at-row"><span>Conv2D</span><span>8 filters, 3×3, ReLU</span><span>28×28×8</span></div>
+        <div class="at-row"><span>MaxPooling2D</span><span>pool 2×2</span><span>14×14×8</span></div>
+        <div class="at-row"><span>Conv2D</span><span>16 filters, 3×3, ReLU</span><span>14×14×16</span></div>
+        <div class="at-row"><span>MaxPooling2D</span><span>pool 2×2</span><span>7×7×16</span></div>
+        <div class="at-row"><span>Flatten</span><span>—</span><span>784</span></div>
+        <div class="at-row at-out"><span>Dense</span><span>10 units, Softmax</span><span>10</span></div>
+      </div>
+    </div>
+
+    <!-- Train Panel -->
+    <div class="card">
+      <h3>Step 1 — Train for 5 Epochs</h3>
+      <p class="card-sub">Epoch count is fixed at 5 as per the assignment. Click to load MNIST and start training.</p>
+
+      <div class="fixed-config">
+        <div class="fc-item"><span class="fc-k">Epochs</span><span class="fc-v locked">5 (Fixed)</span></div>
+        <div class="fc-item"><span class="fc-k">Batch Size</span><span class="fc-v">128</span></div>
+        <div class="fc-item">
+          <span class="fc-k">Train Samples</span>
+          <select id="cfg-n">
+            <option value="2000">2 000</option>
+            <option value="4000" selected>4 000</option>
+            <option value="6000">6 000</option>
+          </select>
+        </div>
+        <div class="fc-item"><span class="fc-k">Optimizer</span><span class="fc-v">Adam (lr=0.001)</span></div>
+        <div class="fc-item"><span class="fc-k">Loss</span><span class="fc-v">Categorical CrossEntropy</span></div>
+      </div>
+
+      <button class="btn" id="btn-train" onclick="startA1()">▶ Start Training (5 Epochs)</button>
+
+      <div class="prog-wrap" id="prog-wrap" style="display:none">
+        <div class="prog-row"><span id="prog-txt">Loading data...</span><span id="prog-p">0%</span></div>
+        <div class="prog-bg"><div class="prog-bar" id="prog-bar"></div></div>
+      </div>
+
+      <!-- Epoch Table — the main output -->
+      <div id="epoch-table-wrap" style="display:none">
+        <h4 class="table-heading">Epoch-by-Epoch Results</h4>
+        <div class="epoch-table">
+          <div class="et-head">
+            <span>Epoch</span><span>Train Loss</span><span>Train Acc</span><span>Val Loss</span><span>Val Acc</span><span>Status</span>
+          </div>
+          <div id="et-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Report Card -->
+    <div class="card report-card" id="report-card" style="display:none">
+      <h3>Final Accuracy Report</h3>
+      <div class="report-grid">
+        <div class="rg-box">
+          <div class="rg-val green" id="r-train-acc">—</div>
+          <div class="rg-lbl">Final Train Accuracy</div>
+        </div>
+        <div class="rg-box">
+          <div class="rg-val blue" id="r-val-acc">—</div>
+          <div class="rg-lbl">Final Val Accuracy</div>
+        </div>
+        <div class="rg-box">
+          <div class="rg-val orange" id="r-test-acc">—</div>
+          <div class="rg-lbl">Test Accuracy</div>
+        </div>
+        <div class="rg-box">
+          <div class="rg-val purple" id="r-train-loss">—</div>
+          <div class="rg-lbl">Final Train Loss</div>
+        </div>
+      </div>
+
+      <!-- Accuracy chart -->
+      <div class="chart-section">
+        <div class="cs-title">Accuracy Curve (5 Epochs)</div>
+        <canvas id="chart-main" width="700" height="220"></canvas>
+      </div>
+
+      <div class="verdict" id="verdict-box">
+        <div class="verdict-icon">✔</div>
+        <div id="verdict-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>Assignment 01 — CNN Accuracy Report</span>
+    <span id="ft">Loading TF.js...</span>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

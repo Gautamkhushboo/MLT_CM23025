@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignment 2 — Draw & Classify</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <div class="scanlines"></div>
+
+  <header>
+    <div class="a2-badge">Assignment 02</div>
+    <h1>Draw &amp; Classify</h1>
+    <p>Train a CNN on MNIST, then draw any digit (0–9) on the canvas and get an instant prediction from the neural network.</p>
+    <div class="steps-strip">
+      <div class="step-item done" id="step-1"><span class="sn">1</span>Train CNN</div>
+      <div class="step-line"></div>
+      <div class="step-item" id="step-2"><span class="sn">2</span>Draw Digit</div>
+      <div class="step-line"></div>
+      <div class="step-item" id="step-3"><span class="sn">3</span>See Prediction</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- PANEL 1: TRAIN -->
+    <div class="panel" id="panel-train">
+      <div class="panel-num">01</div>
+      <div class="panel-content">
+        <h2>Train the CNN</h2>
+        <p>First, train the model so it can recognise handwritten digits. Uses MNIST dataset with 4000 samples, 5 epochs.</p>
+
+        <div class="train-config">
+          <div class="tc-row"><span>Epochs</span><strong>5</strong></div>
+          <div class="tc-row"><span>Samples</span>
+            <select id="cfg-n"><option value="2000">2 000</option><option value="4000" selected>4 000</option><option value="6000">6 000</option></select>
+          </div>
+          <div class="tc-row"><span>Batch</span><strong>128</strong></div>
+          <div class="tc-row"><span>Architecture</span><strong>Conv→Pool→Conv→Pool→Dense</strong></div>
+        </div>
+
+        <button class="btn btn-train" id="btn-train" onclick="doTrain()">⬡ Load MNIST &amp; Train</button>
+
+        <div id="train-prog" style="display:none">
+          <div class="tp-row"><span id="tp-txt">Loading...</span><span id="tp-p">0%</span></div>
+          <div class="tp-bg"><div class="tp-fill" id="tp-fill"></div></div>
+          <div class="tp-stats" id="tp-stats"></div>
+        </div>
+
+        <div class="train-done-box" id="train-done-box" style="display:none">
+          <div class="tdb-icon">✔</div>
+          <div>
+            <div class="tdb-title">Model Trained!</div>
+            <div class="tdb-sub" id="tdb-sub">Ready to classify drawings.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 2: DRAW + PREDICT (side by side) -->
+    <div class="panel panel-draw" id="panel-draw">
+      <div class="panel-num">02</div>
+      <div class="panel-content full">
+        <h2>Draw a Digit &amp; Classify</h2>
+        <p class="panel-desc">Use your mouse or touchscreen to draw a digit on the black canvas. The model predicts it live.</p>
+
+        <div class="draw-predict-layout">
+
+          <!-- Left: Canvas -->
+          <div class="draw-side">
+            <div class="canvas-wrap">
+              <div class="canvas-overlay-lbl" id="canvas-lbl">Draw here</div>
+              <canvas id="draw-canvas" width="280" height="280"></canvas>
+            </div>
+            <div class="canvas-toolbar">
+              <div class="brush-ctrl">
+                <label>Brush</label>
+                <input type="range" id="brush-size" min="10" max="36" value="22" oninput="updateBrush(this.value)"/>
+                <span id="brush-val">22px</span>
+              </div>
+              <button class="tbtn tbtn-clear" onclick="clearDraw()">✕ Clear</button>
+              <button class="tbtn tbtn-predict" id="btn-predict" onclick="classify()" disabled>⬡ Predict</button>
+            </div>
+
+            <!-- What digit did you intend? (for feedback) -->
+            <div class="intended-row" id="intended-row" style="display:none">
+              <span>Was this a:</span>
+              <div class="digit-btns" id="digit-btns"></div>
+            </div>
+          </div>
+
+          <!-- Right: Prediction -->
+          <div class="predict-side">
+            <div class="pred-box" id="pred-box">
+              <div class="pred-waiting" id="pred-waiting">
+                <div class="pw-circle">?</div>
+                <div class="pw-text">Draw a digit<br/>then click Predict</div>
+              </div>
+              <div class="pred-result" id="pred-result" style="display:none">
+                <div class="pr-label">Predicted Digit</div>
+                <div class="pr-digit" id="pr-digit">0</div>
+                <div class="pr-conf-row">
+                  <div class="pr-conf-num" id="pr-conf">0%</div>
+                  <div class="pr-conf-txt">confidence</div>
+                </div>
+
+                <div class="all-probs">
+                  <div class="ap-title">All class probabilities</div>
+                  <div id="ap-bars"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- History of recent guesses -->
+            <div class="history-box" id="history-box" style="display:none">
+              <div class="hb-title">Recent Predictions</div>
+              <div class="hb-list" id="hb-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: HOW IT WORKS -->
+    <div class="panel panel-explain">
+      <div class="panel-num">03</div>
+      <div class="panel-content">
+        <h2>How Classification Works</h2>
+        <div class="explain-steps">
+          <div class="es-item">
+            <div class="es-num">①</div>
+            <div><strong>Canvas Input:</strong> Your 280×280 drawing is downscaled to 28×28 pixels — the exact MNIST format.</div>
+          </div>
+          <div class="es-item">
+            <div class="es-num">②</div>
+            <div><strong>Normalization:</strong> Each pixel value (0–255) is divided by 255 to get values in [0, 1].</div>
+          </div>
+          <div class="es-item">
+            <div class="es-num">③</div>
+            <div><strong>CNN Forward Pass:</strong> The 28×28×1 tensor passes through Conv→Pool→Conv→Pool→Flatten→Dense layers.</div>
+          </div>
+          <div class="es-item">
+            <div class="es-num">④</div>
+            <div><strong>Softmax Output:</strong> The final layer outputs 10 probabilities (one per digit). The highest is the prediction.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>Assignment 02 — Draw &amp; Classify</span>
+    <span id="ft">TF.js Loading...</span>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

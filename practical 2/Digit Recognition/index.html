@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MNIST CNN — Digit Recognition</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-top">
+      <div class="chip">TensorFlow.js · CNN</div>
+      <div class="chip chip-green" id="tf-status">Initializing...</div>
+    </div>
+    <h1>MNIST<br/><span class="h1-sub">Digit Recognition</span></h1>
+    <p class="header-desc">
+      Convolutional Neural Network trained live in-browser on the MNIST dataset.<br/>
+      Train the model, watch it learn, then draw any digit to get a prediction.
+    </p>
+
+    <!-- CNN Architecture strip -->
+    <div class="arch-strip">
+      <div class="arch-node">Input<br/><span>28×28×1</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node">Conv2D<br/><span>8 filters</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node">MaxPool<br/><span>2×2</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node">Conv2D<br/><span>16 filters</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node">MaxPool<br/><span>2×2</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node">Flatten</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node">Dense<br/><span>10</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node arch-out">Softmax<br/><span>Output</span></div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- SECTION 1: TRAIN -->
+    <section class="section" id="section-train">
+      <div class="section-label">01 / TRAIN</div>
+      <h2>Train the CNN</h2>
+      <p class="section-desc">
+        Load MNIST data and train the convolutional neural network.
+        Watch accuracy and loss update epoch by epoch in real-time.
+      </p>
+
+      <div class="config-row">
+        <div class="config-item">
+          <label>Epochs</label>
+          <select id="cfg-epochs">
+            <option value="3">3 — Fast</option>
+            <option value="5" selected>5 — Recommended</option>
+            <option value="10">10 — Thorough</option>
+          </select>
+        </div>
+        <div class="config-item">
+          <label>Batch Size</label>
+          <select id="cfg-batch">
+            <option value="64">64</option>
+            <option value="128" selected>128</option>
+            <option value="256">256</option>
+          </select>
+        </div>
+        <div class="config-item">
+          <label>Train Samples</label>
+          <select id="cfg-samples">
+            <option value="1000">1 000 — Quick</option>
+            <option value="3000" selected>3 000 — Balanced</option>
+            <option value="6000">6 000 — Full</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="btn-train" onclick="startTraining()">
+        <span>⬡</span> Load Data &amp; Train
+      </button>
+
+      <div class="progress-wrap" id="progress-wrap" style="display:none">
+        <div class="progress-label">
+          <span id="progress-text">Loading MNIST data...</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="stats-row" id="stats-row" style="display:none">
+        <div class="stat-card">
+          <div class="stat-label">Epoch</div>
+          <div class="stat-value" id="stat-epoch">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Loss</div>
+          <div class="stat-value stat-orange" id="stat-loss">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Accuracy</div>
+          <div class="stat-value stat-green" id="stat-acc">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Val Loss</div>
+          <div class="stat-value stat-blue" id="stat-valloss">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Val Accuracy</div>
+          <div class="stat-value stat-purple" id="stat-valacc">—</div>
+        </div>
+      </div>
+
+      <div class="charts-grid" id="charts-grid" style="display:none">
+        <div class="chart-card">
+          <div class="chart-title">📉 Loss per Epoch</div>
+          <canvas id="chart-loss" width="400" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">📈 Accuracy per Epoch</div>
+          <canvas id="chart-acc" width="400" height="200"></canvas>
+        </div>
+      </div>
+
+      <div class="log-box" id="train-log" style="display:none">
+        <div class="log-header">
+          <span>▸ Training Log</span>
+          <button class="log-clear-btn" onclick="clearLog()">clear</button>
+        </div>
+        <div class="log-content" id="log-content"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: EVALUATE -->
+    <section class="section" id="section-eval">
+      <div class="section-label">02 / EVALUATE</div>
+      <h2>Model Evaluation</h2>
+      <p class="section-desc">
+        Run the trained CNN on held-out test samples. Compute final test accuracy,
+        loss, and visualize sample predictions with confidence scores.
+      </p>
+
+      <button class="btn btn-secondary" id="btn-eval" onclick="evaluateModel()" disabled>
+        <span>◈</span> Evaluate on Test Set
+      </button>
+
+      <div class="eval-results" id="eval-results" style="display:none">
+        <div class="eval-big">
+          <div class="eval-num" id="eval-acc-num">—</div>
+          <div class="eval-lbl">Test Accuracy</div>
+        </div>
+        <div class="eval-big">
+          <div class="eval-num eval-orange" id="eval-loss-num">—</div>
+          <div class="eval-lbl">Test Loss</div>
+        </div>
+        <div class="eval-big">
+          <div class="eval-num eval-blue" id="eval-samples-num">—</div>
+          <div class="eval-lbl">Test Samples</div>
+        </div>
+      </div>
+
+      <div id="sample-preds-wrap" style="display:none">
+        <h3 class="sub-heading">Sample Predictions (20 random test images)</h3>
+        <div class="sample-grid" id="sample-grid"></div>
+      </div>
+
+      <div id="class-bars-wrap" style="display:none">
+        <h3 class="sub-heading">Per-class Accuracy (digits 0–9)</h3>
+        <div class="class-bars" id="class-bars"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: PREDICT -->
+    <section class="section" id="section-predict">
+      <div class="section-label">03 / PREDICT</div>
+      <h2>Draw &amp; Predict</h2>
+      <p class="section-desc">
+        Draw any digit (0–9) on the canvas. The CNN predicts it instantly
+        and shows confidence scores for all 10 classes.
+      </p>
+
+      <div class="predict-layout">
+        <div class="canvas-area">
+          <div class="canvas-label">Draw a digit below ↓</div>
+          <canvas id="draw-canvas" width="280" height="280"></canvas>
+          <div class="canvas-actions">
+            <button class="btn btn-sm" onclick="clearCanvas()">✕ Clear</button>
+            <button class="btn btn-sm btn-accent" id="btn-predict" onclick="predictDrawing()" disabled>⬡ Predict</button>
+          </div>
+        </div>
+
+        <div class="prediction-panel">
+          <div class="pred-placeholder" id="pred-placeholder">
+            <div class="pred-placeholder-icon">?</div>
+            <span>Train the model first,<br/>then draw a digit to predict</span>
+          </div>
+          <div class="pred-result" id="pred-result" style="display:none">
+            <div class="pred-top">
+              <div class="pred-digit" id="pred-digit">0</div>
+              <div class="pred-meta">
+                <div class="pred-conf-val" id="pred-conf">0%</div>
+                <div class="pred-conf-lbl">confidence</div>
+              </div>
+            </div>
+            <div class="prob-title">All class probabilities</div>
+            <div class="prob-bars" id="prob-bars"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>MNIST Digit Recognition</span>
+      <span class="dot">·</span>
+      <span>CNN via TensorFlow.js</span>
+      <span class="dot">·</span>
+      <span id="footer-tf">Loading TF.js...</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
