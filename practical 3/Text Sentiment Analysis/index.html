@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sentiment Analysis</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Sentiment Library -->
+  <script src="https://cdn.jsdelivr.net/npm/sentiment@5.0.2/build/browser/sentiment.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+
+  <h1>💬 Sentiment Analysis</h1>
+  <p class="subtitle">Analyze text as Positive, Negative or Neutral</p>
+
+  <div class="card">
+    <textarea id="textInput" placeholder="Type your text here..."></textarea>
+
+    <button onclick="analyze()">Analyze Sentiment</button>
+
+    <div id="result">// Result will appear here</div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
