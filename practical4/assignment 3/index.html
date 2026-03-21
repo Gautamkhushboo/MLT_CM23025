@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 3 - Model Comparison</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+</head>
+
+<body>
+
+<h1>⚡ Model Comparison</h1>
+<p>MobileNet vs Simulated ResNet</p>
+
+<input type="file" id="imageUpload">
+<br><br>
+
+<img id="preview">
+
+<br><br>
+
+<button onclick="compareModels()">Compare Models</button>
+
+<div class="result-box">
+
+  <div class="model">
+    <h2>📱 MobileNet</h2>
+    <p id="mobileResult">Waiting...</p>
+  </div>
+
+  <div class="model">
+    <h2>🧠 ResNet (Simulated)</h2>
+    <p id="resnetResult">Waiting...</p>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
