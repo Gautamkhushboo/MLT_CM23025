@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 1 - Static Image</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🧠 AI Image Classification</h1>
+  <p>Static Image using MobileNet</p>
+
+  <div class="card">
+
+    <!-- Embedded Image (No CORS Issue) -->
+    <img id="testImage"
+    src="https://images.unsplash.com/photo-1517849845537-4d257902454a"
+    crossorigin="anonymous">
+
+    <button onclick="classify()">Analyze Image</button>
+
+    <div id="output"></div>
+
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
