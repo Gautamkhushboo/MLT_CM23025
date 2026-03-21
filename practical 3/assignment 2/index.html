@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>💬 Sentiment Analysis</h1>
+    <p class="subtitle">Analyze text with trained model</p>
+
+    <!-- TRAIN SECTION -->
+    <div class="card">
+        <h2>🚀 Train Model</h2>
+        <button onclick="trainModel()">Train Model</button>
+        <p id="trainStatus">Model not trained</p>
+    </div>
+
+    <!-- TEST SECTION -->
+    <div class="card">
+        <h2>🧪 Test Sentiment</h2>
+
+        <textarea id="inputText" placeholder="Enter your sentence..."></textarea>
+
+        <button onclick="predictSentiment()">Analyze Sentiment</button>
+
+        <div class="result-box">
+            <p id="resultText">Result will appear here</p>
+
+            <div class="bar-bg">
+                <div id="confidenceBar"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

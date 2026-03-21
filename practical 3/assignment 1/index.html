@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Analysis - Assignment 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>💬 Sentiment Analysis</h1>
+    <p class="subtitle">Assignment 1 - Train a Sentiment Model</p>
+
+    <div class="card">
+        <button onclick="trainModel()">🚀 Train Model</button>
+
+        <div class="progress-box">
+            <div id="progressBar"></div>
+        </div>
+
+        <p id="trainStatus">Click button to start training</p>
+    </div>
+
+</div>
+
+<!-- TensorFlow -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

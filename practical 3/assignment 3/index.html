@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Model Comparison</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <h1>⚔️ Model Comparison</h1>
+  <p class="subtitle">Dense vs RNN for Sentiment Analysis</p>
+
+  <div class="card">
+    <h2>🚀 Train Models</h2>
+    <button onclick="trainModels()">Train Both Models</button>
+    <p id="status">Models not trained</p>
+  </div>
+
+  <div class="card">
+    <h2>🧪 Test Sentence</h2>
+
+    <textarea id="inputText" placeholder="Enter sentence..."></textarea>
+
+    <button onclick="compareModels()">Compare Models</button>
+
+    <div class="result">
+      <p id="denseResult">Dense: -</p>
+      <p id="rnnResult">RNN: -</p>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
