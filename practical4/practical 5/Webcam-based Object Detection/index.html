@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Webcam Object Detection</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- TensorFlow + MobileNet -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+</head>
+
+<body>
+
+<h1>🎥 AI Webcam Object Detection</h1>
+<p>Real-time object classification using MobileNet</p>
+
+<div class="video-box">
+  <video id="webcam" autoplay playsinline></video>
+</div>
+
+<div class="buttons">
+  <button onclick="startCamera()">Start Camera</button>
+  <button onclick="startDetection()">Start Detection</button>
+</div>
+
+<div class="panel">
+  <p id="status">⏳ Loading Model...</p>
+  <p id="result">Result: --</p>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
