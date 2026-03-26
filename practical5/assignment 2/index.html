@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Assignment 2 - Overlay Detection</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🎯 Live Detection with Overlay</h1>
+<p>MobileNet Real-time Classification</p>
+
+<div class="video-container">
+  <video id="webcam" autoplay playsinline></video>
+  <div id="overlay">Waiting...</div>
+</div>
+
+<div>
+  <button onclick="startCamera()">Start Camera</button>
+  <button onclick="startDetection()">Start Detection</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

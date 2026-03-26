@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  text-align: center;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+}
+
+h1 {
+  margin-top: 20px;
+}
+
+video {
+  width: 450px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px cyan;
+  margin-top: 20px;
+}
+
+button {
+  margin: 15px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  background: cyan;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+#result {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}

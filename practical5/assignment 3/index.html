@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>⚡ FPS Performance Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- TensorFlow + MobileNet -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚡ FPS Performance Analyzer</h1>
+    <p>Real-time detection with performance tracking</p>
+
+    <div class="video-box">
+        <video id="webcam" autoplay playsinline></video>
+
+        <!-- Overlay -->
+        <div id="overlay">
+            <p id="label">Waiting...</p>
+            <p id="fps">FPS: 0</p>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button onclick="startCamera()">🎥 Start Camera</button>
+        <button onclick="startDetection()">🚀 Start Detection</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

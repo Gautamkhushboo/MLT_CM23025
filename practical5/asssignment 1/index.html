@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Assignment 1 - Webcam Classification</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>📷 Webcam Object Classification</h1>
+<p>Using MobileNet Model</p>
+
+<video id="webcam" autoplay playsinline></video>
+
+<div>
+  <button onclick="startCamera()">Start Camera</button>
+  <button onclick="startPrediction()">Start Prediction</button>
+</div>
+
+<p id="result">Result: --</p>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
