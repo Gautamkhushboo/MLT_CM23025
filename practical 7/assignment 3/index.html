@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Export & Import Model</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>📦 Model Export & Import</h1>
+
+<div class="card">
+    <button onclick="trainModel()">🚀 Train</button>
+    <button onclick="saveModel()">💾 Download Model</button>
+
+    <br><br>
+
+    <input type="file" id="upload" multiple>
+    <button onclick="loadModel()">📂 Upload Model</button>
+
+    <br><br>
+
+    <input type="number" id="input" placeholder="Enter number">
+    <button onclick="predict()">🔮 Predict</button>
+
+    <p id="status">Status: Waiting...</p>
+    <h2 id="result">Result: --</h2>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

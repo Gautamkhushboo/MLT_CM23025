@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assignment 2 - Load & Predict</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+
+<body>
+
+<h1>📂 Load Model & Predict</h1>
+
+<div class="card">
+
+    <button onclick="loadModel()">📂 Load Model</button>
+
+    <br><br>
+
+    <input type="number" id="inputValue" placeholder="Enter number">
+
+    <button onclick="predict()">🔮 Predict</button>
+
+    <h3 id="status">Status: Waiting...</h3>
+    <h2 id="result">Result: --</h2>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
