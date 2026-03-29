@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Pose Detection</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h2>AI Pose Detection System</h2>
+
+<div class="controls">
+<p id="mode">Mode: Single Pose</p>
+<button onclick="switchMode()">Switch Mode</button>
+
+<div id="singleInput">
+<input type="text" id="name1" placeholder="Enter Name">
+</div>
+
+<div id="multiInput" style="display:none;">
+<input type="text" id="name1_multi" placeholder="Person 1 Name">
+<input type="text" id="name2_multi" placeholder="Person 2 Name">
+</div>
+
+</div>
+
+<div class="container">
+<video id="video" autoplay playsinline></video>
+<canvas id="canvas"></canvas>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

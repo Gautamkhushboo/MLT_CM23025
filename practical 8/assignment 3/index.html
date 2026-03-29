@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Model Comparison</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🤖 Model Comparison (MobileNet V1 vs V2)</h1>
+
+<div class="card">
+
+  <h3 id="status">⏳ Loading models...</h3>
+
+  <input type="file" id="imageUpload" accept="image/*">
+
+  <img id="preview" src="" alt="Preview">
+
+  <button id="compareBtn">⚡ Compare</button>
+
+  <h2 id="model1">MobileNet V1: -</h2>
+  <h2 id="model2">MobileNet V2: -</h2>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

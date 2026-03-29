@@ -1,46 +1,71 @@
+const video=document.getElementById("video");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+const objectText=document.getElementById("object");
+const confidenceText=document.getElementById("confidence");
+const fpsText=document.getElementById("fps");
+
 let model;
-let webcam = document.getElementById("webcam");
-let statusText = document.getElementById("status");
-let resultText = document.getElementById("result");
+let frames=0;
+let lastTime=performance.now();
 
-// Load MobileNet model
-async function loadModel() {
-    model = await mobilenet.load();
-    statusText.innerHTML = "✅ Model Loaded";
+async function startCamera(){
+
+const stream=await navigator.mediaDevices.getUserMedia({video:true});
+video.srcObject=stream;
+
 }
 
-loadModel();
+async function loadModel(){
 
-// Start Camera
-async function startCamera() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: true
-        });
-        webcam.srcObject = stream;
-    } catch (error) {
-        alert("❌ Camera permission denied!");
-        console.error(error);
-    }
+model=await cocoSsd.load();
+detect();
+
 }
 
-// Start Detection
-function startDetection() {
+async function detect(){
 
-    if (!model) {
-        alert("Model not loaded yet!");
-        return;
-    }
+canvas.width=video.videoWidth;
+canvas.height=video.videoHeight;
 
-    statusText.innerHTML = "🔍 Detecting...";
+const predictions=await model.detect(video);
 
-    setInterval(async () => {
+ctx.clearRect(0,0,canvas.width,canvas.height);
 
-        const predictions = await model.classify(webcam);
+predictions.forEach(p=>{
 
-        resultText.innerHTML =
-            "🧠 " + predictions[0].className +
-            " (" + (predictions[0].probability * 100).toFixed(2) + "%)";
+const [x,y,w,h]=p.bbox;
 
-    }, 1000);
+ctx.strokeStyle="#ff69b4";
+ctx.lineWidth=3;
+
+ctx.strokeRect(x,y,w,h);
+
+ctx.fillStyle="#ff69b4";
+ctx.fillText(p.class,x,y-5);
+
+objectText.innerText="Object: "+p.class;
+confidenceText.innerText="Confidence: "+(p.score*100).toFixed(1)+"%";
+
+});
+
+frames++;
+
+const now=performance.now();
+
+if(now-lastTime>=1000){
+
+fpsText.innerText="FPS: "+frames;
+frames=0;
+lastTime=now;
+
 }
+
+requestAnimationFrame(detect);
+
+}
+
+startCamera();
+
+video.addEventListener("loadeddata",loadModel);

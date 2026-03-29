@@ -1,33 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>AI Webcam Object Detection</title>
+<title>Main Practical - Webcam Object Detection</title>
 
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 
-  <!-- TensorFlow + MobileNet -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+
 </head>
 
 <body>
 
-<h1>🎥 AI Webcam Object Detection</h1>
-<p>Real-time object classification using MobileNet</p>
+<header>
+<h1>AI Webcam Object Detection System</h1>
+</header>
 
-<div class="video-box">
-  <video id="webcam" autoplay playsinline></video>
+<div class="container">
+
+<video id="video" autoplay></video>
+<canvas id="canvas"></canvas>
+
+<div class="info">
+<p id="object">Object: --</p>
+<p id="confidence">Confidence: --</p>
+<p id="fps">FPS: 0</p>
 </div>
 
-<div class="buttons">
-  <button onclick="startCamera()">Start Camera</button>
-  <button onclick="startDetection()">Start Detection</button>
-</div>
-
-<div class="panel">
-  <p id="status">⏳ Loading Model...</p>
-  <p id="result">Result: --</p>
 </div>
 
 <script src="script.js"></script>

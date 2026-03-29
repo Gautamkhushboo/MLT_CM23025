@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Fruit Classifier</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1 class="title">🍎 AI Fruit Classifier</h1>
+
+<div class="card">
+
+  <label class="upload-box">
+    <input type="file" id="imageUpload" accept="image/*">
+    📂 Upload Fruit Image
+  </label>
+
+  <img id="preview" />
+
+  <button id="predictBtn">✨ Predict</button>
+
+  <div class="result-box">
+    <h2 id="result">Prediction: </h2>
+
+    <div class="bar">
+      <div id="barFill"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

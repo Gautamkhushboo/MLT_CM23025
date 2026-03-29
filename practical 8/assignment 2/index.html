@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Accuracy Tester</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>📊 AI Accuracy Tester</h1>
+
+<div class="card">
+
+  <input type="file" id="imageUpload" accept="image/*">
+
+  <img id="preview" src="" alt="Image Preview">
+
+  <input type="text" id="actualInput" placeholder="Enter actual label (e.g. banana)">
+
+  <button id="testBtn">🚀 Test</button>
+
+  <h2 id="prediction">Prediction: -</h2>
+  <h2 id="accuracy">Accuracy: 0%</h2>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+
+<script>
+let model;
+let correct = 0;
+let total = 0;
+
+// Load model
+async function loadModel() {
+  model = await mobilenet.load();
+  console.log("Model Loaded");
+}
+loadModel();
+
+// Preview image instantly
+document.getElementById("imageUpload").addEventListener("change", function() {
+  const file = this.files[0];
+  if (file) {
+    document.getElementById("preview").src = URL.createObjectURL(file);
+  }
+});
+
+// Button click
+document.getElementById("testBtn").addEventListener("click", async () => {
+
+  if (!model) {
+    alert("Model still loading...");
+    return;
+  }
+
+  const file = document.getElementById("imageUpload").files[0];
+  const actual = document.getElementById("actualInput").value.toLowerCase();
+
+  if (!file || !actual) {
+    alert("Upload image & enter label!");
+    return;
+  }
+
+  const img = document.getElementById("preview");
+
+  const predictions = await model.classify(img);
+  const top = predictions[0];
+
+  let label = top.className.toLowerCase();
+
+  // Mapping for better accuracy
+  if(label.includes("banana")) label = "banana";
+  else if(label.includes("apple") || label.includes("granny")) label = "apple";
+  else if(label.includes("orange")) label = "orange";
+  else if(label.includes("lemon") || label.includes("lime")) label = "lemon";
+
+  document.getElementById("prediction").innerText =
+    "Prediction: " + label + " (" + (top.probability*100).toFixed(2) + "%)";
+
+  total++;
+  if(label.includes(actual)) correct++;
+
+  document.getElementById("accuracy").innerText =
+    "Accuracy: " + ((correct/total)*100).toFixed(2) + "%";
+});
+</script>
+
+</body>
+</html>
