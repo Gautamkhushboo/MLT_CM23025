@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emotion AI Detector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Emotion AI Detector 😄😢</h1>
+
+<div class="container">
+
+    <!-- LEFT SIDE -->
+    <div class="camera-section">
+        <div class="video-container">
+            <video id="video" autoplay muted playsinline></video>
+            <canvas id="overlay"></canvas>
+        </div>
+
+        <div class="result-card">
+            <h2 id="emotion">Detecting...</h2>
+            <p id="confidence"></p>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="graph-section">
+        <canvas id="emotionChart"></canvas>
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/face-api.js@0.22.2/dist/face-api.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

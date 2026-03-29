@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+    font-family: "Times New Roman", serif;
+    background: linear-gradient(135deg, #1d4350, #a43931);
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    margin: 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.camera-section {
+    width: 48%;
+}
+
+.graph-section {
+    width: 48%;
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+/* VIDEO */
+.video-container {
+    position: relative;
+    width: 100%;
+}
+
+video {
+    width: 100%;
+    border-radius: 15px;
+}
+
+/* OVERLAY */
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+/* RESULT BOX */
+.result-card {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.2);
+}
+
+#emotion {
+    color: #00ffcc;
+    font-size: 22px;
+}
+
+#confidence {
+    font-size: 16px;
+}
+
+/* GRAPH */
+#emotionChart {
+    width: 100% !important;
+    height: 320px !important;
+}
